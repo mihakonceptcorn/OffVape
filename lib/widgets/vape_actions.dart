@@ -1,13 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:off_vape/data/motivation_texts.dart';
+import 'package:off_vape/providers/vaping_breaks_provider.dart';
 
-class VapeActions extends StatelessWidget {
+class VapeActions extends ConsumerWidget {
   const VapeActions({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Random random = Random();
     int randomIndex = random.nextInt(motivationTexts.length);
     final motivationText = motivationTexts[randomIndex];
@@ -24,7 +26,7 @@ class VapeActions extends StatelessWidget {
                 '+ Vape Break',
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               style: ElevatedButton.styleFrom(
@@ -32,12 +34,11 @@ class VapeActions extends StatelessWidget {
                 foregroundColor: Theme.of(
                   context,
                 ).colorScheme.onPrimaryContainer,
-                side: const BorderSide(
-                  width: 1,
-                  color: Colors.white,
-                ),
+                side: const BorderSide(width: 1, color: Colors.white),
               ),
-              onPressed: () {},
+              onPressed: () {
+                ref.read(vapingBreaksProvider.notifier).addVapeBreak();
+              },
             ),
           ),
           const SizedBox(height: 8),
