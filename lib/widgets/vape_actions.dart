@@ -3,10 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:off_vape/data/motivation_texts.dart';
+import 'package:off_vape/data/substitutes.dart';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 
 class VapeActions extends ConsumerWidget {
   const VapeActions({super.key});
+
+  Future<void> showSubstituteDialog(BuildContext context) async {
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) => ListView(
+        children: substitutes
+            .map(
+              (s) => ListTile(
+                title: Text(s),
+                onTap: () => Navigator.pop(context, s),
+              ),
+            )
+            .toList(),
+      ),
+    );
+
+    if (selected != null) {
+      // saveSubstitute(selected);
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,7 +67,7 @@ class VapeActions extends ConsumerWidget {
             child: ElevatedButton.icon(
               icon: const Icon(Icons.fitness_center),
               label: const Text('Quick exercise instead of vaping'),
-              onPressed: () {},
+              onPressed: () => showSubstituteDialog(context),
             ),
           ),
           const SizedBox(height: 4),
@@ -63,14 +84,18 @@ class VapeActions extends ConsumerWidget {
             width: double.infinity,
             child: Card(
               elevation: 4.0,
-              color: Theme.of(context).colorScheme.surfaceBright,
+              color: Theme.of(context).colorScheme.surfaceContainer,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    const SizedBox(
+                    SizedBox(
                       width: 60,
-                      child: Icon(Icons.info_outline, size: 50),
+                      child: Icon(
+                        Icons.info_outline,
+                        size: 50,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(

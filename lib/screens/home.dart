@@ -9,22 +9,21 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('OffVape'),
-        backgroundColor: Colors.black54,// Theme.of(context).colorScheme.surface,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.person_outline)
+        title: Text(
+          'OffVape',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+        backgroundColor:
+            Colors.black54, // Theme.of(context).colorScheme.surface,
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.person_outline)),
         ],
       ),
       body: const SingleChildScrollView(
-        child: Column(
-          children: [
-            ProgressCard(),
-            VapeActions(),
-          ],
-        ),
+        child: Column(children: [ProgressCard(), VapeActions()]),
       ),
     );
   }
