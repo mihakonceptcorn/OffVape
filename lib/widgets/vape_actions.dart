@@ -15,7 +15,7 @@ class VapeActions extends ConsumerWidget {
     final motivationText = motivationTexts[randomIndex];
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
       child: Column(
         children: [
           SizedBox(
@@ -34,26 +34,25 @@ class VapeActions extends ConsumerWidget {
                 foregroundColor: Theme.of(
                   context,
                 ).colorScheme.onPrimaryContainer,
-                side: const BorderSide(width: 1, color: Colors.white),
               ),
               onPressed: () {
                 ref.read(vapingBreaksProvider.notifier).addVapeBreak();
               },
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           SizedBox(
             width: double.infinity,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               icon: const Icon(Icons.fitness_center),
               label: const Text('Quick exercise instead of vaping'),
               onPressed: () {},
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           SizedBox(
             width: double.infinity,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               icon: const Icon(Icons.bar_chart_sharp),
               label: const Text('Statistics'),
               onPressed: () {},

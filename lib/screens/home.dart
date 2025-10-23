@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('OffVape'),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: Colors.black54,// Theme.of(context).colorScheme.surface,
         actions: [
           IconButton(
             onPressed: () {},

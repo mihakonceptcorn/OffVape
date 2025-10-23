@@ -7,7 +7,8 @@ import 'package:off_vape/screens/home.dart';
 final theme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.dark,
-    seedColor: const Color.fromARGB(255, 13, 0, 255),
+    seedColor: const Color.fromARGB(255, 38, 0, 255),
+    surface: Colors.grey[850],
   ),
   textTheme: GoogleFonts.latoTextTheme(),
 );
