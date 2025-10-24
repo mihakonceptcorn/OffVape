@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:off_vape/widgets/home_stats.dart';
 import 'package:off_vape/widgets/motivation.dart';
 import 'package:off_vape/widgets/progress_card.dart';
 import 'package:off_vape/widgets/vape_actions.dart';
@@ -24,7 +25,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: const SingleChildScrollView(
-        child: Column(children: [ProgressCard(), VapeActions(), Motivation()]),
+        child: Column(children: [ProgressCard(), VapeActions(), Motivation(), HomeStats()]),
       ),
     );
   }
