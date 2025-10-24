@@ -24,8 +24,15 @@ class HomeScreen extends StatelessWidget {
           IconButton(onPressed: () {}, icon: const Icon(Icons.person_outline)),
         ],
       ),
-      body: const SingleChildScrollView(
-        child: Column(children: [ProgressCard(), VapeActions(), Motivation(), HomeStats()]),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const ProgressCard(),
+            VapeActions(),
+            const Motivation(),
+            const HomeStats(),
+          ],
+        ),
       ),
     );
   }

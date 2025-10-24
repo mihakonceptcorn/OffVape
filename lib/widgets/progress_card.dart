@@ -30,11 +30,11 @@ class ProgressCard extends ConsumerWidget {
                           width: 150,
                           height: 150,
                           child: CircularProgressIndicator(
-                            value: currentBreaks <= maxDayVapeBreaks
-                                ? currentBreaks / maxDayVapeBreaks
+                            value: currentBreaks.vapeBreaks <= maxDayVapeBreaks
+                                ? currentBreaks.vapeBreaks / maxDayVapeBreaks
                                 : 1,
                             strokeWidth: 15,
-                            color: currentBreaks <= maxDayVapeBreaks
+                            color: currentBreaks.vapeBreaks <= maxDayVapeBreaks
                                 ? Colors.blueAccent
                                 : Colors.red,
                             backgroundColor: const Color.fromARGB(
@@ -50,7 +50,7 @@ class ProgressCard extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(20),
                           child: Text(
-                            '$currentBreaks VapeBreaks of 20',
+                            '${currentBreaks.vapeBreaks} VapeBreaks of 20',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.titleMedium!
                                 .copyWith(
@@ -67,7 +67,13 @@ class ProgressCard extends ConsumerWidget {
               ),
               const SizedBox(height: 32),
               Text(
-                '$currentBreaks VapeBreaks today',
+                '${currentBreaks.substitutes} Substitutes today',
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              Text(
+                '${currentBreaks.vapeBreaks} VapeBreaks today',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: Theme.of(context).colorScheme.onSurface,
                 ),

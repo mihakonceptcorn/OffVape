@@ -1,20 +1,71 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:off_vape/data/substitutes.dart';
+import 'package:off_vape/models/substitute.dart';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 
-class VapeActions extends ConsumerWidget {
+class VapeActions extends ConsumerStatefulWidget {
   const VapeActions({super.key});
 
+  @override
+  ConsumerState<VapeActions> createState() {
+    return _VapeActionsState();
+  }
+}
+
+class _VapeActionsState extends ConsumerState<VapeActions> {
+  Substitute? _selectedSubstitute;
+
+  Future showSubstitutePopup(BuildContext context) async {
+    final isDone = await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: CupertinoAlertDialog(
+              title: Text(_selectedSubstitute!.title),
+              content: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    height: 150,
+                    child: Image.asset(_selectedSubstitute!.imageSrc),
+                  ),
+                ],
+              ),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  child: const Text('Done'),
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: const Text('Reject'),
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                ),
+              ],
+            ),
+        );
+      },
+    );
+
+    if (isDone) {
+      ref.read(vapingBreaksProvider.notifier).addSubstitute();
+    }
+  }
+
   Future<void> showSubstituteDialog(BuildContext context) async {
-    final selected = await showModalBottomSheet<String>(
+    final Substitute? selected = await showModalBottomSheet<Substitute>(
       context: context,
       builder: (context) => ListView(
         children: substitutes
             .map(
               (s) => ListTile(
-                title: Text(s),
+                title: Text(s.title),
                 onTap: () => Navigator.pop(context, s),
               ),
             )
@@ -22,13 +73,14 @@ class VapeActions extends ConsumerWidget {
       ),
     );
 
-    if (selected != null) {
-      // saveSubstitute(selected);
+    if (selected != null && context.mounted) {
+      _selectedSubstitute = selected;
+      showSubstitutePopup(context);
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
       child: Column(
@@ -42,7 +94,7 @@ class VapeActions extends ConsumerWidget {
                 label: const Text('Statistics'),
                 onPressed: () {},
               ),
-              const SizedBox(width: 8,),
+              const SizedBox(width: 8),
               ElevatedButton.icon(
                 icon: const Icon(Icons.smoking_rooms),
                 label: Text(
@@ -68,10 +120,10 @@ class VapeActions extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           ElevatedButton.icon(
-              icon: const Icon(Icons.fitness_center),
-              label: const Text('Quick exercise instead of vaping'),
-              onPressed: () => showSubstituteDialog(context),
-            ),
+            icon: const Icon(Icons.fitness_center),
+            label: const Text('Quick exercise instead of vaping'),
+            onPressed: () => showSubstituteDialog(context),
+          ),
         ],
       ),
     );
