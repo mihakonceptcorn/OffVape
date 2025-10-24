@@ -21,19 +21,19 @@ class ProgressCard extends ConsumerWidget {
               const SizedBox(height: 16),
               Center(
                 child: SizedBox(
-                  height: 150,
-                  width: 150,
+                  height: 200,
+                  width: 200,
                   child: Stack(
                     children: [
                       Center(
                         child: SizedBox(
-                          width: 150,
-                          height: 150,
+                          width: 200,
+                          height: 200,
                           child: CircularProgressIndicator(
                             value: currentBreaks.vapeBreaks <= maxDayVapeBreaks
                                 ? currentBreaks.vapeBreaks / maxDayVapeBreaks
                                 : 1,
-                            strokeWidth: 15,
+                            strokeWidth: 20,
                             color: currentBreaks.vapeBreaks <= maxDayVapeBreaks
                                 ? Colors.blueAccent
                                 : Colors.red,
@@ -48,16 +48,32 @@ class ProgressCard extends ConsumerWidget {
                       ),
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Text(
-                            '${currentBreaks.vapeBreaks} VapeBreaks of 20',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.titleMedium!
-                                .copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.secondary,
-                                ),
+                          padding: const EdgeInsets.all(25),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${currentBreaks.vapeBreaks} VapeBreaks of $maxDayVapeBreaks',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.titleLarge!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                              ),
+                              const SizedBox(height: 8,),
+                              Text(
+                                '15 min ago',
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                    ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -69,19 +85,7 @@ class ProgressCard extends ConsumerWidget {
               Text(
                 '${currentBreaks.substitutes} Substitutes today',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              Text(
-                '${currentBreaks.vapeBreaks} VapeBreaks today',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              Text(
-                '15 min ago',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
