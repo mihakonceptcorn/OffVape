@@ -54,7 +54,8 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
     );
 
     if (isDone) {
-      ref.read(vapingBreaksProvider.notifier).addSubstitute();
+      ref.read(vapingBreaksProvider.notifier).addSubstitute(_selectedSubstitute!.title);
+      _selectedSubstitute = null;
     }
   }
 

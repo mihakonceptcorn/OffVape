@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
+import 'package:off_vape/models/break.dart';
 
-class ProgressCard extends ConsumerWidget {
+class ProgressCard extends ConsumerStatefulWidget {
   const ProgressCard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProgressCard> createState() {
+    return _ProgressCardState();
+  }
+}
+
+class _ProgressCardState extends ConsumerState<ProgressCard> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(vapingBreaksProvider.notifier).getCurrentBreaks();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final currentBreaks = ref.watch(vapingBreaksProvider);
+    final currentVapeBreaks = currentBreaks.where((b) => b.type == BreakType.inhale).toList();
+    final currentExersizeBreaks = currentBreaks.where((b) => b.type == BreakType.exercise).toList();
     final maxDayVapeBreaks = 20;
 
     return SizedBox(
@@ -30,11 +46,11 @@ class ProgressCard extends ConsumerWidget {
                           width: 200,
                           height: 200,
                           child: CircularProgressIndicator(
-                            value: currentBreaks.vapeBreaks <= maxDayVapeBreaks
-                                ? currentBreaks.vapeBreaks / maxDayVapeBreaks
+                            value: currentVapeBreaks.length <= maxDayVapeBreaks
+                                ? currentVapeBreaks.length / maxDayVapeBreaks
                                 : 1,
                             strokeWidth: 20,
-                            color: currentBreaks.vapeBreaks <= maxDayVapeBreaks
+                            color: currentVapeBreaks.length <= maxDayVapeBreaks
                                 ? Colors.blueAccent
                                 : Colors.red,
                             backgroundColor: const Color.fromARGB(
@@ -53,7 +69,7 @@ class ProgressCard extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                '${currentBreaks.vapeBreaks} VapeBreaks of $maxDayVapeBreaks',
+                                '${currentVapeBreaks.length} VapeBreaks of $maxDayVapeBreaks',
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.titleLarge!
                                     .copyWith(
@@ -83,7 +99,7 @@ class ProgressCard extends ConsumerWidget {
               ),
               const SizedBox(height: 32),
               Text(
-                '${currentBreaks.substitutes} Substitutes today',
+                '${currentExersizeBreaks.length} Substitutes today',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                 ),
