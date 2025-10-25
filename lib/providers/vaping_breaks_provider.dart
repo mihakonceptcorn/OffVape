@@ -89,8 +89,6 @@ class VapingBreaksNotifier extends Notifier<List<Break>> {
       )
     ).toList();
 
-    print(results);
-
     state = results;
   }
 }
