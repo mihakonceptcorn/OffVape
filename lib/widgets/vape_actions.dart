@@ -55,8 +55,9 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
 
     if (isDone) {
       ref.read(vapingBreaksProvider.notifier).addSubstitute(_selectedSubstitute!.title);
-      _selectedSubstitute = null;
     }
+
+    _selectedSubstitute = null;
   }
 
   Future<void> showSubstituteDialog(BuildContext context) async {

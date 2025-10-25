@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 import 'package:off_vape/models/break.dart';
+import 'package:off_vape/local_storage/user_settings.dart';
 
 class ProgressCard extends ConsumerStatefulWidget {
   const ProgressCard({super.key});
@@ -13,18 +15,38 @@ class ProgressCard extends ConsumerStatefulWidget {
 }
 
 class _ProgressCardState extends ConsumerState<ProgressCard> {
+  String? language;
+  int? limit;
+
   @override
   void initState() {
     super.initState();
     ref.read(vapingBreaksProvider.notifier).getCurrentBreaks();
+    _loadSettings();
   }
+
+  Future<void> _loadSettings() async {
+    final lang = await UserSettings.getLanguage();
+    final dailyLimit = await UserSettings.getDailyLimit();
+
+    if (mounted) {
+      setState(() {
+        language = lang;
+        limit = dailyLimit;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    if (language == null || limit == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     final currentBreaks = ref.watch(vapingBreaksProvider);
     final currentVapeBreaks = currentBreaks.where((b) => b.type == BreakType.inhale).toList();
     final currentExersizeBreaks = currentBreaks.where((b) => b.type == BreakType.exercise).toList();
-    final maxDayVapeBreaks = 20;
 
     return SizedBox(
       width: double.infinity,
@@ -46,11 +68,11 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
                           width: 200,
                           height: 200,
                           child: CircularProgressIndicator(
-                            value: currentVapeBreaks.length <= maxDayVapeBreaks
-                                ? currentVapeBreaks.length / maxDayVapeBreaks
+                            value: currentVapeBreaks.length <= limit!
+                                ? currentVapeBreaks.length / limit!
                                 : 1,
                             strokeWidth: 20,
-                            color: currentVapeBreaks.length <= maxDayVapeBreaks
+                            color: currentVapeBreaks.length <= limit!
                                 ? Colors.blueAccent
                                 : Colors.red,
                             backgroundColor: const Color.fromARGB(
@@ -69,7 +91,7 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                '${currentVapeBreaks.length} VapeBreaks of $maxDayVapeBreaks',
+                                '${currentVapeBreaks.length} VapeBreaks of $limit',
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.titleLarge!
                                     .copyWith(
