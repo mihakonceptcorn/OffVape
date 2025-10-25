@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:off_vape/screens/user.dart';
 
 import 'package:off_vape/widgets/home_stats.dart';
 import 'package:off_vape/widgets/motivation.dart';
@@ -30,17 +31,19 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.delete_forever),
           ),
           IconButton(onPressed: () {}, icon: const Icon(Icons.bar_chart_sharp)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.person_outline)),
+          IconButton(
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (ctx) => const UserScreen()));
+            },
+            icon: const Icon(Icons.person_outline),
+          ),
         ],
       ),
       body: const SingleChildScrollView(
         child: Column(
-          children: [
-            ProgressCard(),
-            VapeActions(),
-            Motivation(),
-            HomeStats(),
-          ],
+          children: [ProgressCard(), VapeActions(), Motivation(), HomeStats()],
         ),
       ),
     );
