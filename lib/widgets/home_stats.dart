@@ -64,7 +64,7 @@ class HomeStats extends StatelessWidget {
                         ),
                         const SizedBox(width: 16),
                         Text(
-                          'Statistics for the last 7 days.',
+                          'Statistics for the past 7 days.',
                           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.bold,
