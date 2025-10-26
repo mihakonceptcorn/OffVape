@@ -31,6 +31,34 @@ Future<void> clearTable() async {
   await db.delete('inhale_sessions');
 }
 
+Future<List<Break>> getBreaksByDays(int days) async {
+  final db = await _getDatabase();
+
+    var start = DateTime.now().subtract(Duration(days: days));
+    var end = DateTime.now();
+
+    final startDate = DateTime(start.year, start.month, start.day).millisecondsSinceEpoch;
+    final endDate = DateTime(end.year, end.month, end.day).millisecondsSinceEpoch;
+
+    final data = await db.query(
+      'inhale_sessions',
+      where: 'timestamp BETWEEN ? AND ?',
+      whereArgs: [startDate, endDate],
+      orderBy: 'timestamp ASC',
+    );
+
+    final results = data.map(
+      (r) => Break(
+        timestamp: DateTime.fromMillisecondsSinceEpoch(r['timestamp'] as int),
+        type: BreakType.values.firstWhere((e) => e.name == r['type'] as String),
+        exerciseType: r['exercise_type'] as String?,
+        id: r['id'] as String
+      )
+    ).toList();
+
+    return results;
+}
+
 class VapingBreaksNotifier extends Notifier<List<Break>> {
   @override
   List<Break> build() {
