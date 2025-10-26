@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 import 'package:off_vape/models/break.dart';
@@ -34,6 +36,49 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
       _isLoading = false;
     });
+  }
+
+  Future<void> showPeriodDialog(BuildContext context) async {
+    final periods = ['7', '30', '90', '180', '365'];
+
+    final String? selectedPeriod = await showModalBottomSheet(
+      context: context,
+      builder: (context) => ListView(
+        children: periods
+            .map(
+              (days) => ListTile(
+                title: Text(days),
+                shape: const Border(
+                  bottom: BorderSide(color: Colors.grey, width: 1.0),
+                ),
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.pop(context, days);
+                },
+              ),
+            )
+            .toList(),
+      ),
+    );
+
+    if (selectedPeriod != null) {
+      setState(() {
+        _isLoading = true;
+        _period = int.parse(selectedPeriod);
+      });
+      final data = await getBreaksByDays(_period);
+
+      setState(() {
+        _breaks = data;
+        _vapeBreaks = _breaks.where((b) => b.type == BreakType.inhale).toList();
+
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Period changed to $selectedPeriod')),
+      );
+    }
   }
 
   @override
@@ -121,7 +166,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         ),
                         const SizedBox(height: 32),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            showPeriodDialog(context);
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(
                               context,
