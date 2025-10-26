@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import 'package:off_vape/providers/vaping_breaks_provider.dart';
+import 'package:off_vape/models/break.dart';
+
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
 
@@ -11,8 +14,44 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class _StatisticsScreenState extends State<StatisticsScreen> {
+  late List<Break> _breaks;
+  late List<Break> _vapeBreaks;
+  bool _isLoading = true;
+  int _period = 7;
+
+  @override
+  void initState() {
+    super.initState();
+    loadInitialData();
+  }
+
+  void loadInitialData() async {
+    final data = await getBreaksByDays(_period);
+
+    setState(() {
+      _breaks = data;
+      _vapeBreaks = _breaks.where((b) => b.type == BreakType.inhale).toList();
+
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final now = DateTime.now();
+    final List<int> dailyVapeCounts = List.filled(_period, 0);
+
+    for (final vapeBreak in _vapeBreaks) {
+      final diff = now.difference(vapeBreak.timestamp).inDays;
+      if (diff >= 1 && diff <= _period) {
+        dailyVapeCounts[_period - diff]++;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -47,7 +86,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                     child: Column(
                       children: [
                         Text(
-                          'Statistics for the past 7 days.',
+                          'VapeBreaks for the past $_period days.',
                           style: Theme.of(context).textTheme.titleMedium!
                               .copyWith(
                                 color: Theme.of(context).colorScheme.onSurface,
@@ -56,90 +95,26 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         ),
                         const SizedBox(height: 16),
                         SizedBox(
-                          height: 250,
+                          height: 200,
                           child: BarChart(
                             BarChartData(
                               borderData: FlBorderData(show: false),
                               titlesData: const FlTitlesData(show: false),
                               gridData: const FlGridData(show: true),
                               barGroups: [
-                                BarChartGroupData(
-                                  x: 0,
-                                  barRods: [
-                                    BarChartRodData(
-                                      toY: 1,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ],
-                                ),
-                                BarChartGroupData(
-                                  x: 0,
-                                  barRods: [
-                                    BarChartRodData(
-                                      toY: 2,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ],
-                                ),
-                                BarChartGroupData(
-                                  x: 0,
-                                  barRods: [
-                                    BarChartRodData(
-                                      toY: 3,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ],
-                                ),
-                                BarChartGroupData(
-                                  x: 0,
-                                  barRods: [
-                                    BarChartRodData(
-                                      toY: 4,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ],
-                                ),
-                                BarChartGroupData(
-                                  x: 1,
-                                  barRods: [
-                                    BarChartRodData(
-                                      toY: 5,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ],
-                                ),
-                                BarChartGroupData(
-                                  x: 2,
-                                  barRods: [
-                                    BarChartRodData(
-                                      toY: 6,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ],
-                                ),
-                                BarChartGroupData(
-                                  x: 3,
-                                  barRods: [
-                                    BarChartRodData(
-                                      toY: 7,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ],
-                                ),
+                                for (final count
+                                    in dailyVapeCounts) // alternative to map()
+                                  BarChartGroupData(
+                                    x: 0,
+                                    barRods: [
+                                      BarChartRodData(
+                                        toY: count.toDouble(),
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                           ),
