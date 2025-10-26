@@ -17,6 +17,12 @@ class ProgressCard extends ConsumerStatefulWidget {
 
 class _ProgressCardState extends ConsumerState<ProgressCard> {
   @override
+  void initState() {
+    super.initState();
+    ref.read(vapingBreaksProvider.notifier).getCurrentBreaks();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
 
