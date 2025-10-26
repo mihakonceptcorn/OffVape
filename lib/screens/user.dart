@@ -1,36 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:off_vape/providers/user_settings_provider.dart';
 
-import 'package:off_vape/local_storage/user_settings.dart';
-
-class UserScreen extends StatefulWidget {
+class UserScreen extends ConsumerWidget {
   const UserScreen({super.key});
 
-  @override
-  State<UserScreen> createState() => _UserScreenState();
-}
+  Future<void> _showLanguageDialog(BuildContext context, WidgetRef ref) async {
+    final notifier = ref.read(settingsProvider.notifier);
+    final languages = ['en', 'uk'];
 
-class _UserScreenState extends State<UserScreen> {
-  String? _language;
-  int? _limit;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserSettings();
-  }
-
-  Future<void> _loadUserSettings() async {
-    final lang = await UserSettings.getLanguage();
-    final limit = await UserSettings.getDailyLimit();
-
-    setState(() {
-      _language = lang;
-      _limit = limit;
-    });
-  }
-
-  Future<void> showLanguageDialog(BuildContext context) async {
-    final languages = ['en', 'ua'];
     final String? selectedLanguage = await showModalBottomSheet(
       context: context,
       builder: (context) => ListView(
@@ -49,19 +27,25 @@ class _UserScreenState extends State<UserScreen> {
     );
 
     if (selectedLanguage != null) {
-      await UserSettings.setLanguage(selectedLanguage);
-      setState(() {
-        _language = selectedLanguage;
-      });
+      await notifier.updateLanguage(selectedLanguage);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Language changed to $selectedLanguage')),
+      );
     }
   }
 
-  Future<void> showLimitDialog(BuildContext context, int currentLimit) async {
+  Future<void> _showLimitDialog(
+    BuildContext context,
+    WidgetRef ref,
+    int currentLimit,
+  ) async {
+    final notifier = ref.read(settingsProvider.notifier);
     final TextEditingController controller = TextEditingController(
       text: currentLimit.toString(),
     );
 
-    final int? selectedLimit = await showModalBottomSheet(
+    final int? selectedLimit = await showModalBottomSheet<int>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
@@ -90,16 +74,16 @@ class _UserScreenState extends State<UserScreen> {
                 controller: controller,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Daily limit (number of vape sessions)',
+                  labelText: 'Daily limit (number of vape breaks)',
                   border: OutlineInputBorder(),
                 ),
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 16),
               ElevatedButton.icon(
-                onPressed: () async {
+                onPressed: () {
                   final newLimit = int.tryParse(controller.text);
                   if (newLimit == null || newLimit <= 0) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -111,10 +95,6 @@ class _UserScreenState extends State<UserScreen> {
                   }
 
                   Navigator.pop(context, newLimit);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Daily limit updated to $newLimit')),
-                  );
                 },
                 icon: const Icon(Icons.check),
                 label: const Text('Save'),
@@ -130,15 +110,18 @@ class _UserScreenState extends State<UserScreen> {
     );
 
     if (selectedLimit != null) {
-      await UserSettings.setDailyLimit(selectedLimit);
-      setState(() {
-        _limit = selectedLimit;
-      });
+      await notifier.updateLimit(selectedLimit);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Daily limit updated to $selectedLimit')),
+      );
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -148,8 +131,7 @@ class _UserScreenState extends State<UserScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor:
-            Colors.black54, // Theme.of(context).colorScheme.surface,
+        backgroundColor: Colors.black54,
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.bar_chart_sharp)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.person_outline)),
@@ -166,6 +148,7 @@ class _UserScreenState extends State<UserScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // --- Language ---
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -177,7 +160,7 @@ class _UserScreenState extends State<UserScreen> {
                               ),
                         ),
                         Text(
-                          '$_language',
+                          settings.languageCode,
                           style: Theme.of(context).textTheme.bodyMedium!
                               .copyWith(
                                 color: Theme.of(context).colorScheme.secondary,
@@ -189,6 +172,8 @@ class _UserScreenState extends State<UserScreen> {
                     const SizedBox(height: 8),
                     const Divider(),
                     const SizedBox(height: 8),
+
+                    // --- Limit ---
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -200,7 +185,7 @@ class _UserScreenState extends State<UserScreen> {
                               ),
                         ),
                         Text(
-                          '$_limit',
+                          settings.dailyLimit.toString(),
                           style: Theme.of(context).textTheme.bodyMedium!
                               .copyWith(
                                 color: Theme.of(context).colorScheme.secondary,
@@ -212,11 +197,13 @@ class _UserScreenState extends State<UserScreen> {
                     const SizedBox(height: 8),
                     const Divider(),
                     const SizedBox(height: 32),
+
+                    // --- Buttons ---
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () => showLanguageDialog(context),
+                          onPressed: () => _showLanguageDialog(context, ref),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(
                               context,
@@ -228,7 +215,11 @@ class _UserScreenState extends State<UserScreen> {
                           child: const Text('Change language'),
                         ),
                         ElevatedButton(
-                          onPressed: () => showLimitDialog(context, _limit!),
+                          onPressed: () => _showLimitDialog(
+                            context,
+                            ref,
+                            settings.dailyLimit,
+                          ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(
                               context,
