@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:off_vape/providers/user_settings_provider.dart';
 
@@ -19,7 +20,10 @@ class UserScreen extends ConsumerWidget {
                 shape: const Border(
                   bottom: BorderSide(color: Colors.grey, width: 1.0),
                 ),
-                onTap: () => Navigator.pop(context, lang),
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.pop(context, lang);
+                },
               ),
             )
             .toList(),
@@ -84,6 +88,8 @@ class UserScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () {
+                  HapticFeedback.lightImpact();
+
                   final newLimit = int.tryParse(controller.text);
                   if (newLimit == null || newLimit <= 0) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -133,8 +139,12 @@ class UserScreen extends ConsumerWidget {
         ),
         backgroundColor: Colors.black54,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.bar_chart_sharp)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.person_outline)),
+          IconButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+            },
+            icon: const Icon(Icons.person_outline),
+          ),
         ],
       ),
       body: Column(
@@ -203,7 +213,10 @@ class UserScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () => _showLanguageDialog(context, ref),
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            _showLanguageDialog(context, ref);
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(
                               context,
@@ -215,11 +228,10 @@ class UserScreen extends ConsumerWidget {
                           child: const Text('Change language'),
                         ),
                         ElevatedButton(
-                          onPressed: () => _showLimitDialog(
-                            context,
-                            ref,
-                            settings.dailyLimit,
-                          ),
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            _showLimitDialog(context, ref, settings.dailyLimit);
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(
                               context,

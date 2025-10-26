@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:off_vape/screens/user.dart';
 
 import 'package:off_vape/widgets/home_stats.dart';
@@ -30,9 +31,9 @@ class HomeScreen extends StatelessWidget {
             },
             icon: const Icon(Icons.delete_forever),
           ),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.bar_chart_sharp)),
           IconButton(
             onPressed: () {
+              HapticFeedback.lightImpact();
               Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (ctx) => const UserScreen()));

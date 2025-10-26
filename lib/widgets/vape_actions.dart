@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:off_vape/data/substitutes.dart';
@@ -38,12 +40,14 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
                 CupertinoDialogAction(
                   child: const Text('Done'),
                   onPressed: () {
+                    HapticFeedback.lightImpact();
                     Navigator.pop(context, true);
                   },
                 ),
                 CupertinoDialogAction(
                   child: const Text('Reject'),
                   onPressed: () {
+                    HapticFeedback.lightImpact();
                     Navigator.pop(context, false);
                   },
                 ),
@@ -68,7 +72,10 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
             .map(
               (s) => ListTile(
                 title: Text(s.title),
-                onTap: () => Navigator.pop(context, s),
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.pop(context, s);
+                },
               ),
             )
             .toList(),
@@ -94,7 +101,9 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
               ElevatedButton.icon(
                 icon: const Icon(Icons.bar_chart_sharp),
                 label: const Text('Statistics'),
-                onPressed: () {},
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                },
               ),
               const SizedBox(width: 8),
               ElevatedButton.icon(
@@ -115,6 +124,7 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
                   ).colorScheme.onPrimaryContainer,
                 ),
                 onPressed: () {
+                  HapticFeedback.heavyImpact();
                   ref.read(vapingBreaksProvider.notifier).addVapeBreak();
                 },
               ),
@@ -124,7 +134,10 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
           ElevatedButton.icon(
             icon: const Icon(Icons.fitness_center),
             label: const Text('Quick exercise instead of vaping'),
-            onPressed: () => showSubstituteDialog(context),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              showSubstituteDialog(context);
+            },
           ),
         ],
       ),
