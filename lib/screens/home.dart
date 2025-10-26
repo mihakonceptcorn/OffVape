@@ -6,7 +6,6 @@ import 'package:off_vape/widgets/home_stats.dart';
 import 'package:off_vape/widgets/motivation.dart';
 import 'package:off_vape/widgets/progress_card.dart';
 import 'package:off_vape/widgets/vape_actions.dart';
-import 'package:off_vape/providers/vaping_breaks_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,12 +24,6 @@ class HomeScreen extends StatelessWidget {
         backgroundColor:
             Colors.black54, // Theme.of(context).colorScheme.surface,
         actions: [
-          IconButton(
-            onPressed: () {
-              clearTable();
-            },
-            icon: const Icon(Icons.delete_forever),
-          ),
           IconButton(
             onPressed: () {
               HapticFeedback.lightImpact();

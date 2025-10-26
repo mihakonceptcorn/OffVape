@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:off_vape/providers/user_settings_provider.dart';
+import 'package:off_vape/providers/vaping_breaks_provider.dart';
 
 class UserScreen extends ConsumerWidget {
   const UserScreen({super.key});
@@ -124,6 +127,40 @@ class UserScreen extends ConsumerWidget {
     }
   }
 
+  Future<void> _showRemovePopup(BuildContext context) async {
+    final isConfirm = await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: CupertinoAlertDialog(
+              title: const Text('Clear all data?'),
+              content: const Text('This action will permanently delete all your session history and reset your progress. Are you sure you want to continue?'),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  child: const Text('Delete all'),
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.pop(context, true);
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.pop(context, false);
+                  },
+                ),
+              ],
+            ),
+        );
+      },
+    );
+
+    if (isConfirm) {
+      clearTable();
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
@@ -210,7 +247,7 @@ class UserScreen extends ConsumerWidget {
 
                     // --- Buttons ---
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
                           onPressed: () {
@@ -226,6 +263,28 @@ class UserScreen extends ConsumerWidget {
                             ).colorScheme.onPrimaryContainer,
                           ),
                           child: const Text('Change language'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.remove_circle_outline),
+                          label: const Text('Clear all data',),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.errorContainer,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.onErrorContainer,
+                          ),
+                          onPressed: () {
+                            HapticFeedback.heavyImpact();
+                            _showRemovePopup(context);
+                          },
                         ),
                         ElevatedButton(
                           onPressed: () {
