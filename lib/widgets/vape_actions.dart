@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:off_vape/data/substitutes.dart';
 import 'package:off_vape/models/substitute.dart';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
+import 'package:off_vape/screens/statistics.dart';
 
 class VapeActions extends ConsumerStatefulWidget {
   const VapeActions({super.key});
@@ -26,39 +27,41 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
       builder: (BuildContext context) {
         return Center(
           child: CupertinoAlertDialog(
-              title: Text(_selectedSubstitute!.title),
-              content: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    height: 150,
-                    child: Image.asset(_selectedSubstitute!.imageSrc),
-                  ),
-                ],
-              ),
-              actions: <CupertinoDialogAction>[
-                CupertinoDialogAction(
-                  child: const Text('Done'),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    Navigator.pop(context, true);
-                  },
-                ),
-                CupertinoDialogAction(
-                  child: const Text('Reject'),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    Navigator.pop(context, false);
-                  },
+            title: Text(_selectedSubstitute!.title),
+            content: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  height: 150,
+                  child: Image.asset(_selectedSubstitute!.imageSrc),
                 ),
               ],
             ),
+            actions: <CupertinoDialogAction>[
+              CupertinoDialogAction(
+                child: const Text('Done'),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.pop(context, true);
+                },
+              ),
+              CupertinoDialogAction(
+                child: const Text('Reject'),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.pop(context, false);
+                },
+              ),
+            ],
+          ),
         );
       },
     );
 
     if (isDone) {
-      ref.read(vapingBreaksProvider.notifier).addSubstitute(_selectedSubstitute!.title);
+      ref
+          .read(vapingBreaksProvider.notifier)
+          .addSubstitute(_selectedSubstitute!.title);
     }
 
     _selectedSubstitute = null;
@@ -103,6 +106,11 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
                 label: const Text('Statistics'),
                 onPressed: () {
                   HapticFeedback.lightImpact();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => const StatisticsScreen(),
+                    ),
+                  );
                 },
               ),
               const SizedBox(width: 8),
