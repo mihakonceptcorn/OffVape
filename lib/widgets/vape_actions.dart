@@ -4,10 +4,12 @@ import 'package:flutter/services.dart';
 // import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:off_vape/providers/user_settings_provider.dart';
 import 'package:off_vape/data/substitutes.dart';
 import 'package:off_vape/models/substitute.dart';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 import 'package:off_vape/screens/statistics.dart';
+import 'package:off_vape/l10n/app_localizations.dart';
 
 class VapeActions extends ConsumerStatefulWidget {
   const VapeActions({super.key});
@@ -93,61 +95,71 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = ref.watch(settingsProvider);
+
     return Padding(
       padding: const EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton.icon(
-                icon: const Icon(Icons.bar_chart_sharp),
-                label: const Text('Statistics'),
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (ctx) => const StatisticsScreen(),
+      child: Localizations.override(
+        context: context,
+        locale: Locale(settings.languageCode),
+        child: Builder(
+          builder: (context) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.bar_chart_sharp),
+                      label: Text(AppLocalizations.of(context)!.homeStBtn),
+                      onPressed: () {
+                        HapticFeedback.lightImpact();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => const StatisticsScreen(),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.smoking_rooms),
-                label: Text(
-                  '+ Vape Break',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.bold,
-                  ),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.smoking_rooms),
+                      label: Text(
+                        AppLocalizations.of(context)!.homeAddBtn,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.primaryContainer,
+                        foregroundColor: Theme.of(
+                          context,
+                        ).colorScheme.onPrimaryContainer,
+                      ),
+                      onPressed: () {
+                        HapticFeedback.heavyImpact();
+                        ref.read(vapingBreaksProvider.notifier).addVapeBreak();
+                      },
+                    ),
+                  ],
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.primaryContainer,
-                  foregroundColor: Theme.of(
-                    context,
-                  ).colorScheme.onPrimaryContainer,
+                const SizedBox(height: 8),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.fitness_center),
+                  label: Text(AppLocalizations.of(context)!.homeQuickBtn),
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    showSubstituteDialog(context);
+                  },
                 ),
-                onPressed: () {
-                  HapticFeedback.heavyImpact();
-                  ref.read(vapingBreaksProvider.notifier).addVapeBreak();
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.fitness_center),
-            label: const Text('Quick exercise instead of vaping'),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              showSubstituteDialog(context);
-            },
-          ),
-        ],
+              ],
+            );
+          }
+        ),
       ),
     );
   }

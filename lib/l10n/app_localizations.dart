@@ -155,7 +155,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeAddBtn.
   ///
   /// In en, this message translates to:
-  /// **'Vape Break'**
+  /// **'+ Vape Break'**
   String get homeAddBtn;
 
   /// No description provided for @homeQuickBtn.

@@ -1,10 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
+import 'package:off_vape/providers/user_settings_provider.dart';
 import 'package:off_vape/models/break.dart';
+import 'package:off_vape/l10n/app_localizations.dart';
 
-class HomeStats extends StatelessWidget {
+class HomeStats extends ConsumerWidget {
   const HomeStats({super.key});
 
   Future<List<Break>> _loadBreaks() async {
@@ -13,7 +16,9 @@ class HomeStats extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
+
     return FutureBuilder(
       future: _loadBreaks(),
       builder: (context, snapshot) {
@@ -54,23 +59,31 @@ class HomeStats extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(
-                          Icons.bar_chart_sharp,
-                          size: 30,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'Statistics for the past 7 days.',
-                          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    Localizations.override(
+                      context: context,
+                      locale: Locale(settings.languageCode),
+                      child: Builder(
+                        builder: (context) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(
+                                Icons.bar_chart_sharp,
+                                size: 30,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(width: 16),
+                              Text(
+                                AppLocalizations.of(context)!.homeStatsTitle,
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  color: Theme.of(context).colorScheme.secondary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                      ),
                     ),
                     const SizedBox(height: 16),
                     SizedBox(

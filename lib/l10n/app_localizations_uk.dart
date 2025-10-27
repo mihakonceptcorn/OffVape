@@ -36,7 +36,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get homeStBtn => 'Статистика';
 
   @override
-  String get homeAddBtn => 'Вейпінг';
+  String get homeAddBtn => '+ Вейпінг';
 
   @override
   String get homeQuickBtn => 'Швидка вправа замість вейпінгу';

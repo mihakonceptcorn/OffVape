@@ -36,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeStBtn => 'Statistics';
 
   @override
-  String get homeAddBtn => 'Vape Break';
+  String get homeAddBtn => '+ Vape Break';
 
   @override
   String get homeQuickBtn => 'Quick exercise instead of vaping';
