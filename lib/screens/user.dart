@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:off_vape/providers/user_settings_provider.dart';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
+import 'package:off_vape/l10n/app_localizations.dart';
 
 class UserScreen extends ConsumerWidget {
   const UserScreen({super.key});
@@ -192,118 +193,132 @@ class UserScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // --- Language ---
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Language:',
-                          style: Theme.of(context).textTheme.bodyMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
+                child: Localizations.override(
+                  context: context,
+                  locale: Locale(settings.languageCode),
+                  child: Builder(
+                    builder: (context) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // --- Language ---
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.language,
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                    ),
                               ),
-                        ),
-                        Text(
-                          settings.languageCode,
-                          style: Theme.of(context).textTheme.bodyMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontWeight: FontWeight.bold,
+                              Text(
+                                settings.languageCode,
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    const Divider(),
-                    const SizedBox(height: 8),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          const Divider(),
+                          const SizedBox(height: 8),
 
-                    // --- Limit ---
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Maximum vape breaks per day:',
-                          style: Theme.of(context).textTheme.bodyMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
+                          // --- Limit ---
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.userMaxNum,
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                    ),
                               ),
-                        ),
-                        Text(
-                          settings.dailyLimit.toString(),
-                          style: Theme.of(context).textTheme.bodyMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontWeight: FontWeight.bold,
+                              Text(
+                                settings.dailyLimit.toString(),
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    const Divider(),
-                    const SizedBox(height: 32),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          const Divider(),
+                          const SizedBox(height: 32),
 
-                    // --- Buttons ---
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            HapticFeedback.lightImpact();
-                            _showLanguageDialog(context, ref);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer,
-                            foregroundColor: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
+                          // --- Buttons ---
+                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ElevatedButton.icon(
+                                icon: const Icon(Icons.remove_circle_outline),
+                                label: Text(AppLocalizations.of(context)!.clearAll,),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.errorContainer,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.onErrorContainer,
+                                ),
+                                onPressed: () {
+                                  HapticFeedback.heavyImpact();
+                                  _showRemovePopup(context);
+                                },
+                              ),
+                            ],
                           ),
-                          child: const Text('Change language'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton.icon(
-                          icon: const Icon(Icons.remove_circle_outline),
-                          label: const Text('Clear all data',),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.errorContainer,
-                            foregroundColor: Theme.of(
-                              context,
-                            ).colorScheme.onErrorContainer,
+                          const SizedBox(height: 16,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  HapticFeedback.lightImpact();
+                                  _showLanguageDialog(context, ref);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimaryContainer,
+                                ),
+                                child: Text(AppLocalizations.of(context)!.changeLanguage),
+                              ),
+                            ],
                           ),
-                          onPressed: () {
-                            HapticFeedback.heavyImpact();
-                            _showRemovePopup(context);
-                          },
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            HapticFeedback.lightImpact();
-                            _showLimitDialog(context, ref, settings.dailyLimit);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer,
-                            foregroundColor: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
+                          const SizedBox(height: 16,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  HapticFeedback.lightImpact();
+                                  _showLimitDialog(context, ref, settings.dailyLimit);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimaryContainer,
+                                ),
+                                child: Text(AppLocalizations.of(context)!.changeMaxBreaks),
+                              ),
+                            ],
                           ),
-                          child: const Text('Change MaxBreaks'),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      );
+                    }
+                  ),
                 ),
               ),
             ),
