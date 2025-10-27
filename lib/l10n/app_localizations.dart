@@ -169,6 +169,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Statistics for the past 7 days'**
   String get homeStatsTitle;
+
+  /// No description provided for @statsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statsTitle;
+
+  /// No description provided for @statsTitleSub.
+  ///
+  /// In en, this message translates to:
+  /// **'VapeBreaks for the past {days} days.'**
+  String statsTitleSub(Object days);
+
+  /// No description provided for @statsChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change period'**
+  String get statsChange;
 }
 
 class _AppLocalizationsDelegate

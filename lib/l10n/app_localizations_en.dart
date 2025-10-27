@@ -43,4 +43,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeStatsTitle => 'Statistics for the past 7 days';
+
+  @override
+  String get statsTitle => 'Statistics';
+
+  @override
+  String statsTitleSub(Object days) {
+    return 'VapeBreaks for the past $days days.';
+  }
+
+  @override
+  String get statsChange => 'Change period';
 }

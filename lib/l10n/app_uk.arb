@@ -10,5 +10,8 @@
   "homeStBtn": "Статистика",
   "homeAddBtn": "+ Вейпінг",
   "homeQuickBtn": "Швидка вправа замість вейпінгу",
-  "homeStatsTitle": "Статистика за минулі 7 днів"
+  "homeStatsTitle": "Статистика за минулі 7 днів",
+  "statsTitle": "Статистика",
+  "statsTitleSub": "Вейпінг за минулі {days} днів.",
+  "statsChange": "Змінити період"
 }

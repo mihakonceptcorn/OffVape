@@ -43,4 +43,15 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get homeStatsTitle => 'Статистика за минулі 7 днів';
+
+  @override
+  String get statsTitle => 'Статистика';
+
+  @override
+  String statsTitleSub(Object days) {
+    return 'Вейпінг за минулі $days днів.';
+  }
+
+  @override
+  String get statsChange => 'Змінити період';
 }

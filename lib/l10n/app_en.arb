@@ -10,5 +10,8 @@
   "homeStBtn": "Statistics",
   "homeAddBtn": "+ Vape Break",
   "homeQuickBtn": "Quick exercise instead of vaping",
-  "homeStatsTitle": "Statistics for the past 7 days"
+  "homeStatsTitle": "Statistics for the past 7 days",
+  "statsTitle": "Statistics",
+  "statsTitleSub": "VapeBreaks for the past {days} days.",
+  "statsChange": "Change period"
 }
