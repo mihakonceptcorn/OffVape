@@ -25,6 +25,7 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
+    int minutesFromBreak = 0;
 
     final currentBreaks = ref.watch(vapingBreaksProvider);
     final currentVapeBreaks = currentBreaks
@@ -33,6 +34,13 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
     final currentExersizeBreaks = currentBreaks
         .where((b) => b.type == BreakType.exercise)
         .toList();
+
+    if (currentVapeBreaks.isNotEmpty) {
+      final lastBreakTime = currentVapeBreaks.last.timestamp;
+      final now = DateTime.now();
+      final diff = now.difference(lastBreakTime);
+      minutesFromBreak = diff.inMinutes;
+    }
 
     return SizedBox(
       width: double.infinity,
@@ -101,7 +109,7 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      '15 ${AppLocalizations.of(context)!.homeMinAgo}',
+                                      '$minutesFromBreak ${AppLocalizations.of(context)!.homeMinAgo}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
