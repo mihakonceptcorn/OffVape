@@ -12,7 +12,7 @@ final theme = ThemeData(
     seedColor: const Color.fromARGB(255, 38, 0, 255),
     surface: Colors.grey[850],
   ),
-  textTheme: GoogleFonts.latoTextTheme(),
+  textTheme: GoogleFonts.robotoTextTheme(),
 );
 
 void main() {
