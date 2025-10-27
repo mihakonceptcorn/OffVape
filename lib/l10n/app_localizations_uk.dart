@@ -22,4 +22,25 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get changeMaxBreaks => 'Змінити кількість перекурів';
+
+  @override
+  String get homeVapeBreaks => 'ВейпоПарок з';
+
+  @override
+  String get homeMinAgo => 'хвилин тому';
+
+  @override
+  String get homeSToday => 'замін сьогодні';
+
+  @override
+  String get homeStBtn => 'Статистика';
+
+  @override
+  String get homeAddBtn => 'Вейпінг';
+
+  @override
+  String get homeQuickBtn => 'Швидка вправа замість вейпінгу';
+
+  @override
+  String get homeStatsTitle => 'Статистика за минулі 7 днів';
 }

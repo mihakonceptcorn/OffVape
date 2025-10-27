@@ -127,6 +127,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change MaxBreaks'**
   String get changeMaxBreaks;
+
+  /// No description provided for @homeVapeBreaks.
+  ///
+  /// In en, this message translates to:
+  /// **'VapeBreaks of'**
+  String get homeVapeBreaks;
+
+  /// No description provided for @homeMinAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'min ago'**
+  String get homeMinAgo;
+
+  /// No description provided for @homeSToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitutes today'**
+  String get homeSToday;
+
+  /// No description provided for @homeStBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get homeStBtn;
+
+  /// No description provided for @homeAddBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Vape Break'**
+  String get homeAddBtn;
+
+  /// No description provided for @homeQuickBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick exercise instead of vaping'**
+  String get homeQuickBtn;
+
+  /// No description provided for @homeStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics for the past 7 days'**
+  String get homeStatsTitle;
 }
 
 class _AppLocalizationsDelegate

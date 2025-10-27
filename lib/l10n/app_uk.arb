@@ -3,5 +3,12 @@
   "userMaxNum": "Максимум перекурів на день:",
   "changeLanguage": "Змінити мову",
   "clearAll": "Очистити дані",
-  "changeMaxBreaks": "Змінити кількість перекурів"
+  "changeMaxBreaks": "Змінити кількість перекурів",
+  "homeVapeBreaks": "ВейпоПарок з",
+  "homeMinAgo": "хвилин тому",
+  "homeSToday": "замін сьогодні",
+  "homeStBtn": "Статистика",
+  "homeAddBtn": "Вейпінг",
+  "homeQuickBtn": "Швидка вправа замість вейпінгу",
+  "homeStatsTitle": "Статистика за минулі 7 днів"
 }

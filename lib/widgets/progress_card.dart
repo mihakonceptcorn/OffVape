@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 import 'package:off_vape/providers/user_settings_provider.dart';
-
-import 'package:off_vape/models/break.dart';
-
 import 'package:off_vape/l10n/app_localizations.dart';
+import 'package:off_vape/models/break.dart';
 
 class ProgressCard extends ConsumerStatefulWidget {
   const ProgressCard({super.key});
@@ -29,8 +27,12 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
     final settings = ref.watch(settingsProvider);
 
     final currentBreaks = ref.watch(vapingBreaksProvider);
-    final currentVapeBreaks = currentBreaks.where((b) => b.type == BreakType.inhale).toList();
-    final currentExersizeBreaks = currentBreaks.where((b) => b.type == BreakType.exercise).toList();
+    final currentVapeBreaks = currentBreaks
+        .where((b) => b.type == BreakType.inhale)
+        .toList();
+    final currentExersizeBreaks = currentBreaks
+        .where((b) => b.type == BreakType.exercise)
+        .toList();
 
     return SizedBox(
       width: double.infinity,
@@ -40,7 +42,7 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
           padding: const EdgeInsets.all(16),
           child: Localizations.override(
             context: context,
-            locale: const Locale('uk'),
+            locale: Locale(settings.languageCode),
             child: Builder(
               builder: (context) {
                 return Column(
@@ -57,11 +59,16 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
                                 width: 200,
                                 height: 200,
                                 child: CircularProgressIndicator(
-                                  value: currentVapeBreaks.length <= settings.dailyLimit
-                                      ? currentVapeBreaks.length / settings.dailyLimit
+                                  value:
+                                      currentVapeBreaks.length <=
+                                          settings.dailyLimit
+                                      ? currentVapeBreaks.length /
+                                            settings.dailyLimit
                                       : 1,
                                   strokeWidth: 20,
-                                  color: currentVapeBreaks.length <= settings.dailyLimit
+                                  color:
+                                      currentVapeBreaks.length <=
+                                          settings.dailyLimit
                                       ? Colors.blueAccent
                                       : Colors.red,
                                   backgroundColor: const Color.fromARGB(
@@ -80,20 +87,24 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '${currentVapeBreaks.length} VapeBreaks of ${settings.dailyLimit}',
+                                      '${currentVapeBreaks.length} ${AppLocalizations.of(context)!.homeVapeBreaks} ${settings.dailyLimit}',
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context).textTheme.titleLarge!
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
                                           .copyWith(
                                             color: Theme.of(
                                               context,
                                             ).colorScheme.secondary,
-                                            fontWeight: FontWeight.bold
+                                            fontWeight: FontWeight.bold,
                                           ),
                                     ),
-                                    const SizedBox(height: 8,),
+                                    const SizedBox(height: 8),
                                     Text(
-                                      '15 min ago',
-                                      style: Theme.of(context).textTheme.bodyLarge!
+                                      '15 ${AppLocalizations.of(context)!.homeMinAgo}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
                                           .copyWith(
                                             color: Theme.of(
                                               context,
@@ -110,14 +121,14 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
                     ),
                     const SizedBox(height: 32),
                     Text(
-                      '${currentExersizeBreaks.length} Substitutes today',
+                      '${currentExersizeBreaks.length} ${AppLocalizations.of(context)!.homeSToday}',
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],
                 );
-              }
+              },
             ),
           ),
         ),

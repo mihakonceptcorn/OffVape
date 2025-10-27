@@ -22,4 +22,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changeMaxBreaks => 'Change MaxBreaks';
+
+  @override
+  String get homeVapeBreaks => 'VapeBreaks of';
+
+  @override
+  String get homeMinAgo => 'min ago';
+
+  @override
+  String get homeSToday => 'Substitutes today';
+
+  @override
+  String get homeStBtn => 'Statistics';
+
+  @override
+  String get homeAddBtn => 'Vape Break';
+
+  @override
+  String get homeQuickBtn => 'Quick exercise instead of vaping';
+
+  @override
+  String get homeStatsTitle => 'Statistics for the past 7 days';
 }
