@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'dart:async';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 import 'package:off_vape/providers/user_settings_provider.dart';
 import 'package:off_vape/l10n/app_localizations.dart';
@@ -16,10 +17,29 @@ class ProgressCard extends ConsumerStatefulWidget {
 }
 
 class _ProgressCardState extends ConsumerState<ProgressCard> {
+  late Timer _timer;
+
+  void startPeriodicTask() {
+    _timer = Timer.periodic(const Duration(minutes: 1), (Timer timer) {
+      ref.read(vapingBreaksProvider.notifier).getCurrentBreaks();
+    });
+  }
+
+  void stopPeriodicTask() {
+    _timer.cancel();
+  }
+
   @override
   void initState() {
     super.initState();
     ref.read(vapingBreaksProvider.notifier).getCurrentBreaks();
+    startPeriodicTask();
+  }
+
+  @override
+  void dispose() {
+    stopPeriodicTask();
+    super.dispose();
   }
 
   @override
@@ -99,7 +119,7 @@ class _ProgressCardState extends ConsumerState<ProgressCard> {
                                       textAlign: TextAlign.center,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .titleLarge!
+                                          .titleMedium!
                                           .copyWith(
                                             color: Theme.of(
                                               context,
