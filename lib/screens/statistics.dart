@@ -92,10 +92,18 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     }
 
     final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
     final List<int> dailyVapeCounts = List.filled(_period, 0);
 
     for (final vapeBreak in _vapeBreaks) {
-      final diff = now.difference(vapeBreak.timestamp).inDays;
+      final date = DateTime(
+        vapeBreak.timestamp.year,
+        vapeBreak.timestamp.month,
+        vapeBreak.timestamp.day,
+      );
+
+      final diff = today.difference(date).inDays;
+
       if (diff >= 1 && diff <= _period) {
         dailyVapeCounts[_period - diff]++;
       }

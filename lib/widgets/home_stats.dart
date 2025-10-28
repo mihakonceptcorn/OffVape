@@ -34,17 +34,32 @@ class HomeStats extends ConsumerWidget {
         final breaks = data.where((b) => b.type == BreakType.inhale);
 
         final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
         final List<int> dailyCounts = List.filled(7, 0);
 
         for (final vapeBreak in breaks) {
-          final diff = now.difference(vapeBreak.timestamp).inDays;
+          final date = DateTime(
+            vapeBreak.timestamp.year,
+            vapeBreak.timestamp.month,
+            vapeBreak.timestamp.day,
+          );
+
+          final diff = today.difference(date).inDays;
+
           if (diff >= 1 && diff <= 7) {
             dailyCounts[7 - diff]++;
           }
         }
 
+        print(dailyCounts);
+
         return Padding(
-          padding: const EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
+          padding: const EdgeInsets.only(
+            top: 0,
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
           child: SizedBox(
             width: double.infinity,
             child: Card(
@@ -75,14 +90,17 @@ class HomeStats extends ConsumerWidget {
                               const SizedBox(width: 16),
                               Text(
                                 AppLocalizations.of(context)!.homeStatsTitle,
-                                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  color: Theme.of(context).colorScheme.secondary,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ],
                           );
-                        }
+                        },
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -167,7 +185,7 @@ class HomeStats extends ConsumerWidget {
             ),
           ),
         );
-      }
+      },
     );
   }
 }
