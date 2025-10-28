@@ -54,4 +54,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get statsChange => 'Змінити період';
+
+  @override
+  String statsTitleExercise(Object days) {
+    return 'Заміни вейпінгу за останні $days days.';
+  }
 }

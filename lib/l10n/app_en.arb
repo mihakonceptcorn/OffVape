@@ -13,5 +13,6 @@
   "homeStatsTitle": "Statistics for the past 7 days",
   "statsTitle": "Statistics",
   "statsTitleSub": "VapeBreaks for the past {days} days.",
-  "statsChange": "Change period"
+  "statsChange": "Change period",
+  "statsTitleExercise": "Substitutes for the past {days} days."
 }

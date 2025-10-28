@@ -20,6 +20,7 @@ class StatisticsScreen extends ConsumerStatefulWidget {
 class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   late List<Break> _breaks;
   late List<Break> _vapeBreaks;
+  late List<Break> _exerciseBreaks;
   bool _isLoading = true;
   int _period = 7;
 
@@ -35,6 +36,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     setState(() {
       _breaks = data;
       _vapeBreaks = _breaks.where((b) => b.type == BreakType.inhale).toList();
+      _exerciseBreaks = _breaks
+          .where((b) => b.type == BreakType.exercise)
+          .toList();
 
       _isLoading = false;
     });
@@ -73,7 +77,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
       setState(() {
         _breaks = data;
         _vapeBreaks = _breaks.where((b) => b.type == BreakType.inhale).toList();
-
+        _exerciseBreaks = _breaks
+            .where((b) => b.type == BreakType.exercise)
+            .toList();
         _isLoading = false;
       });
 
@@ -94,6 +100,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final List<int> dailyVapeCounts = List.filled(_period, 0);
+    final List<int> dailyExerciseCounts = List.filled(_period, 0);
 
     for (final vapeBreak in _vapeBreaks) {
       final date = DateTime(
@@ -109,10 +116,24 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
       }
     }
 
+    for (final exerciseBreak in _exerciseBreaks) {
+      final date = DateTime(
+        exerciseBreak.timestamp.year,
+        exerciseBreak.timestamp.month,
+        exerciseBreak.timestamp.day,
+      );
+
+      final diff = today.difference(date).inDays;
+
+      if (diff >= 1 && diff <= _period) {
+        dailyExerciseCounts[_period - diff]++;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'OffVape',
+          AppLocalizations.of(context)!.statsTitle,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
             color: Theme.of(context).colorScheme.onPrimaryContainer,
             fontWeight: FontWeight.bold,
@@ -133,14 +154,6 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        AppLocalizations.of(context)!.statsTitle,
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 18),
                       Card(
                         elevation: 4.0,
                         child: Padding(
@@ -185,27 +198,72 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 32),
-                              ElevatedButton(
-                                onPressed: () {
-                                  HapticFeedback.lightImpact();
-                                  showPeriodDialog(context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primaryContainer,
-                                  foregroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimaryContainer,
-                                ),
-                                child: Text(
-                                  AppLocalizations.of(context)!.statsChange,
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Card(
+                        elevation: 4.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.statsTitleExercise(_period),
+                                style: Theme.of(context).textTheme.titleMedium!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                              const SizedBox(height: 16),
+                              SizedBox(
+                                height: 200,
+                                child: BarChart(
+                                  BarChartData(
+                                    borderData: FlBorderData(show: false),
+                                    titlesData: const FlTitlesData(show: false),
+                                    gridData: const FlGridData(show: true),
+                                    barGroups: [
+                                      for (final count
+                                          in dailyExerciseCounts) // alternative to map()
+                                        BarChartGroupData(
+                                          x: 0,
+                                          barRods: [
+                                            BarChartRodData(
+                                              toY: count.toDouble(),
+                                              color: Colors.green[200],
+                                            ),
+                                          ],
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
+                      ),
+                      const SizedBox(height: 16,),
+                      ElevatedButton(
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          showPeriodDialog(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimaryContainer,
+                        ),
+                        child: Text(AppLocalizations.of(context)!.statsChange),
                       ),
                     ],
                   );

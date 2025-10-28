@@ -13,5 +13,6 @@
   "homeStatsTitle": "Статистика за минулі 7 днів",
   "statsTitle": "Статистика",
   "statsTitleSub": "Вейпінг за минулі {days} днів.",
-  "statsChange": "Змінити період"
+  "statsChange": "Змінити період",
+  "statsTitleExercise": "Заміни вейпінгу за останні {days} days."
 }

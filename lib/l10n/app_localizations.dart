@@ -187,6 +187,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change period'**
   String get statsChange;
+
+  /// No description provided for @statsTitleExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitutes for the past {days} days.'**
+  String statsTitleExercise(Object days);
 }
 
 class _AppLocalizationsDelegate

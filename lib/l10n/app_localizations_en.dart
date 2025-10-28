@@ -54,4 +54,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statsChange => 'Change period';
+
+  @override
+  String statsTitleExercise(Object days) {
+    return 'Substitutes for the past $days days.';
+  }
 }
