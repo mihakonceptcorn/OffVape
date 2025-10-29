@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'l10n/app_localizations.dart';
 
 import 'package:off_vape/screens/home.dart';
@@ -16,9 +18,16 @@ final theme = ThemeData(
   textTheme: GoogleFonts.robotoTextTheme(),
 );
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+
+  String config = '.env.production';
+  if (kDebugMode || kProfileMode) {
+    config = '.env.development';
+  }
+
+  await dotenv.load(fileName: config);
 
   runApp(const ProviderScope(child: App()));
 }
