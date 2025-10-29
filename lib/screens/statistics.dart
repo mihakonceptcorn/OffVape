@@ -36,7 +36,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     loadInitialData();
 
     _bannerAd = BannerAd(
-      adUnitId: bannerAdUnitId, // заміниш на свій ID після релізу
+      adUnitId: bannerAdUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(

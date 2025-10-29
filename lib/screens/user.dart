@@ -29,7 +29,7 @@ class _UserScreenState extends ConsumerState<UserScreen> {
     super.initState();
 
     _bannerAd = BannerAd(
-      adUnitId: bannerAdUnitId, // заміниш на свій ID після релізу
+      adUnitId: bannerAdUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
