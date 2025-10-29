@@ -3,12 +3,46 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'package:off_vape/providers/user_settings_provider.dart';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 import 'package:off_vape/l10n/app_localizations.dart';
 
-class UserScreen extends ConsumerWidget {
+class UserScreen extends ConsumerStatefulWidget {
   const UserScreen({super.key});
+
+  @override
+  ConsumerState<UserScreen> createState() {
+    return _UserScreenState();
+  }
+}
+
+class _UserScreenState extends ConsumerState<UserScreen> {
+  late BannerAd _bannerAd;
+  bool _isAdLoaded = false;
+
+  final String bannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bannerAd = BannerAd(
+      adUnitId: bannerAdUnitId, // заміниш на свій ID після релізу
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) => setState(() => _isAdLoaded = true),
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('Ad failed to load: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd.load();
+  }
 
   Future<void> _showLanguageDialog(BuildContext context, WidgetRef ref) async {
     final notifier = ref.read(settingsProvider.notifier);
@@ -134,25 +168,27 @@ class UserScreen extends ConsumerWidget {
       builder: (BuildContext context) {
         return Center(
           child: CupertinoAlertDialog(
-              title: const Text('Clear all data?'),
-              content: const Text('This action will permanently delete all your session history and reset your progress. Are you sure you want to continue?'),
-              actions: <CupertinoDialogAction>[
-                CupertinoDialogAction(
-                  child: const Text('Delete all'),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    Navigator.pop(context, true);
-                  },
-                ),
-                CupertinoDialogAction(
-                  child: const Text('Cancel'),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    Navigator.pop(context, false);
-                  },
-                ),
-              ],
+            title: const Text('Clear all data?'),
+            content: const Text(
+              'This action will permanently delete all your session history and reset your progress. Are you sure you want to continue?',
             ),
+            actions: <CupertinoDialogAction>[
+              CupertinoDialogAction(
+                child: const Text('Delete all'),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.pop(context, true);
+                },
+              ),
+              CupertinoDialogAction(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.pop(context, false);
+                },
+              ),
+            ],
+          ),
         );
       },
     );
@@ -163,7 +199,7 @@ class UserScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
 
     return Scaffold(
@@ -209,14 +245,18 @@ class UserScreen extends ConsumerWidget {
                                 AppLocalizations.of(context)!.language,
                                 style: Theme.of(context).textTheme.bodyMedium!
                                     .copyWith(
-                                      color: Theme.of(context).colorScheme.secondary,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                     ),
                               ),
                               Text(
                                 settings.languageCode,
                                 style: Theme.of(context).textTheme.bodyMedium!
                                     .copyWith(
-                                      color: Theme.of(context).colorScheme.secondary,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
@@ -234,14 +274,18 @@ class UserScreen extends ConsumerWidget {
                                 AppLocalizations.of(context)!.userMaxNum,
                                 style: Theme.of(context).textTheme.bodyMedium!
                                     .copyWith(
-                                      color: Theme.of(context).colorScheme.secondary,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                     ),
                               ),
                               Text(
                                 settings.dailyLimit.toString(),
                                 style: Theme.of(context).textTheme.bodyMedium!
                                     .copyWith(
-                                      color: Theme.of(context).colorScheme.secondary,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
@@ -252,12 +296,14 @@ class UserScreen extends ConsumerWidget {
                           const SizedBox(height: 32),
 
                           // --- Buttons ---
-                           Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               ElevatedButton.icon(
                                 icon: const Icon(Icons.remove_circle_outline),
-                                label: Text(AppLocalizations.of(context)!.clearAll,),
+                                label: Text(
+                                  AppLocalizations.of(context)!.clearAll,
+                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Theme.of(
                                     context,
@@ -273,7 +319,7 @@ class UserScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16,),
+                          const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -290,11 +336,13 @@ class UserScreen extends ConsumerWidget {
                                     context,
                                   ).colorScheme.onPrimaryContainer,
                                 ),
-                                child: Text(AppLocalizations.of(context)!.changeLanguage),
+                                child: Text(
+                                  AppLocalizations.of(context)!.changeLanguage,
+                                ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16,),
+                          const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -311,18 +359,27 @@ class UserScreen extends ConsumerWidget {
                                     context,
                                   ).colorScheme.onPrimaryContainer,
                                 ),
-                                child: Text(AppLocalizations.of(context)!.changeMaxBreaks),
+                                child: Text(
+                                  AppLocalizations.of(context)!.changeMaxBreaks,
+                                ),
                               ),
                             ],
                           ),
                         ],
                       );
-                    }
+                    },
                   ),
                 ),
               ),
             ),
           ),
+          const SizedBox(height: 32),
+          if (_isAdLoaded)
+            SizedBox(
+              height: _bannerAd.size.height.toDouble(),
+              width: _bannerAd.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd),
+            ),
         ],
       ),
     );
