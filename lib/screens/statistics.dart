@@ -1,3 +1,4 @@
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';
@@ -24,10 +25,37 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   bool _isLoading = true;
   int _period = 7;
 
+  late BannerAd _bannerAd;
+  bool _isAdLoaded = false;
+
+  // final String bannerAdUnitId = dotenv.env['AD_UNIT_ID_BANNER']!;
+  final String bannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
+
   @override
   void initState() {
     super.initState();
     loadInitialData();
+
+    _bannerAd = BannerAd(
+      adUnitId: bannerAdUnitId, // заміниш на свій ID після релізу
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) => setState(() => _isAdLoaded = true),
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('Ad failed to load: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd.load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    super.dispose();
   }
 
   void loadInitialData() async {
@@ -211,6 +239,22 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          showPeriodDialog(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimaryContainer,
+                        ),
+                        child: Text(AppLocalizations.of(context)!.statsChange),
+                      ),
+                      const SizedBox(height: 16),
                       Card(
                         elevation: 4.0,
                         child: Padding(
@@ -257,22 +301,13 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16,),
-                      ElevatedButton(
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          showPeriodDialog(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primaryContainer,
-                          foregroundColor: Theme.of(
-                            context,
-                          ).colorScheme.onPrimaryContainer,
+                      const SizedBox(height: 32),
+                      if (_isAdLoaded)
+                        SizedBox(
+                          height: _bannerAd.size.height.toDouble(),
+                          width: _bannerAd.size.width.toDouble(),
+                          child: AdWidget(ad: _bannerAd),
                         ),
-                        child: Text(AppLocalizations.of(context)!.statsChange),
-                      ),
                     ],
                   );
                 },
