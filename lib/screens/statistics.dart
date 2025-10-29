@@ -28,7 +28,6 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   late BannerAd _bannerAd;
   bool _isAdLoaded = false;
 
-  // final String bannerAdUnitId = dotenv.env['AD_UNIT_ID_BANNER']!;
   final String bannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
 
   @override
