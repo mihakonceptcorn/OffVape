@@ -51,8 +51,6 @@ class HomeStats extends ConsumerWidget {
           }
         }
 
-        print(dailyCounts);
-
         return Padding(
           padding: const EdgeInsets.only(
             top: 0,
