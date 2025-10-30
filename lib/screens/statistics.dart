@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 import 'package:off_vape/providers/user_settings_provider.dart';
