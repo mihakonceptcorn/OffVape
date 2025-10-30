@@ -38,8 +38,8 @@ android {
         manifestPlaceholders["ADMOB_APP_ID"] = envProps["ADMOB_APP_ID"] ?: ""
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = 1
+        versionName = "1.0.4"
     }
 
     buildTypes {
