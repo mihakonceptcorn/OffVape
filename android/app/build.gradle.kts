@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.io.FileInputStream
 
 val buildTypeName = gradle.startParameter.taskNames
     .joinToString(" ")
@@ -14,9 +15,16 @@ if (envFile.exists()) envFile.reader().use { envProps.load(it) }
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    FileInputStream(keystorePropertiesFile).use {
+        keystoreProperties.load(it)
+    }
 }
 
 android {
@@ -35,16 +43,31 @@ android {
 
     defaultConfig {
         applicationId = "com.offvape.app"
-        manifestPlaceholders["ADMOB_APP_ID"] = envProps["ADMOB_APP_ID"] ?: ""
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0.4"
+        manifestPlaceholders["ADMOB_APP_ID"] = envProps["ADMOB_APP_ID"] ?: ""
+    }
+
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"]?.toString()
+            keyPassword = keystoreProperties["keyPassword"]?.toString()
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"]?.toString()
+        }
     }
 
     buildTypes {
-        release {
-            signingConfig = signingConfigs.getByName("debug")
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

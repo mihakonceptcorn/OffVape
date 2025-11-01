@@ -48,3 +48,5 @@ app.*.map.json
 
 .env.production
 .env.development
+
+offvape-release-key.jks
