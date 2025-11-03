@@ -1,16 +1,29 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:off_vape/data/motivation_texts.dart';
+import 'package:off_vape/data/motivation_texts_uk.dart';
+import 'package:off_vape/providers/user_settings_provider.dart';
 
-class Motivation extends StatelessWidget {
+class Motivation extends ConsumerWidget {
   const Motivation({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
+
     Random random = Random();
-    int randomIndex = random.nextInt(motivationTexts.length);
-    final motivationText = motivationTexts[randomIndex];
+
+    var localMotivationTexts = motivationTexts;
+    if (settings.languageCode == 'uk') {
+      localMotivationTexts = motivationTextsUk;
+    }
+
+    int randomIndex = random.nextInt(localMotivationTexts.length);
+    final motivationText = localMotivationTexts[randomIndex];
+
+
 
     return Padding(
       padding: const EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
