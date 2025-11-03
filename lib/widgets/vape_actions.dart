@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:off_vape/providers/user_settings_provider.dart';
 import 'package:off_vape/data/substitutes.dart';
+import 'package:off_vape/data/substitutes_uk.dart';
 import 'package:off_vape/models/substitute.dart';
 import 'package:off_vape/providers/vaping_breaks_provider.dart';
 import 'package:off_vape/screens/statistics.dart';
@@ -22,6 +23,15 @@ class VapeActions extends ConsumerStatefulWidget {
 
 class _VapeActionsState extends ConsumerState<VapeActions> {
   Substitute? _selectedSubstitute;
+  late String languageCode;
+
+  @override
+  void initState() {
+    super.initState();
+    final settings = ref.read(settingsProvider);
+    print(settings.languageCode);
+    languageCode = settings.languageCode;
+  }
 
   Future showSubstitutePopup(BuildContext context) async {
     final isDone = await showCupertinoModalPopup(
@@ -69,11 +79,16 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
     _selectedSubstitute = null;
   }
 
-  Future<void> showSubstituteDialog(BuildContext context) async {
+  Future<void> showSubstituteDialog(BuildContext context, String languageCode) async {
+    var localSubstitutes = substitutes;
+    if (languageCode == 'uk') {
+      localSubstitutes = substitutesUk;
+    }
+
     final Substitute? selected = await showModalBottomSheet<Substitute>(
       context: context,
       builder: (context) => ListView(
-        children: substitutes
+        children: localSubstitutes
             .map(
               (s) => ListTile(
                 title: Text(s.title),
@@ -153,7 +168,7 @@ class _VapeActionsState extends ConsumerState<VapeActions> {
                   label: Text(AppLocalizations.of(context)!.homeQuickBtn),
                   onPressed: () {
                     HapticFeedback.lightImpact();
-                    showSubstituteDialog(context);
+                    showSubstituteDialog(context, settings.languageCode);
                   },
                 ),
               ],
