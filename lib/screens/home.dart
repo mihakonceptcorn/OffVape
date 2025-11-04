@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:off_vape/screens/statistics.dart';
 import 'package:off_vape/screens/user.dart';
 
 import 'package:off_vape/widgets/home_stats.dart';
@@ -24,6 +25,15 @@ class HomeScreen extends StatelessWidget {
         backgroundColor:
             Colors.black54, // Theme.of(context).colorScheme.surface,
         actions: [
+          IconButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (ctx) => const StatisticsScreen()));
+            },
+            icon: const Icon(Icons.bar_chart),
+          ),
           IconButton(
             onPressed: () {
               HapticFeedback.lightImpact();
