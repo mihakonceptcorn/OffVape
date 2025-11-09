@@ -45,8 +45,8 @@ android {
         applicationId = "com.offvape.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 2
-        versionName = "1.0.4"
+        versionCode = 3
+        versionName = "1.0.5"
         manifestPlaceholders["ADMOB_APP_ID"] = envProps["ADMOB_APP_ID"] ?: ""
     }
 
